@@ -46,20 +46,20 @@ hr {
   background-color: #444; }
 
 #app {
-  width: 1280px;
-  margin: 0 auto; }
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center; }
 
 #comments {
   padding: 5px;
   font-size: 12px;
   color: #fff;
   /* height: 100%; */
-  width: 25%;
+  width: 350px;
   overflow: hidden;
-  position: absolute;
-  top: 0%;
-  bottom: 0%;
-  pointer-events: none;
+  position: relative;
+  flex-shrink: 0;
   /*
 	span {
 		padding: 0 1px;
@@ -130,7 +130,6 @@ hr {
   #comments img {
     vertical-align: middle; }
   #comments.niconico {
-    width: 1280px;
     height: 720px;
     display: block;
     overflow: hidden; }
@@ -151,8 +150,6 @@ hr {
         display: none; }
 
 #player {
-  width: 1280px;
-  height: 720px;
   position: relative;
   overflow: hidden;
   /* margin: auto; */ }
@@ -167,9 +164,11 @@ hr {
   /* background: #3D4470; */
   background: #f0f; }
 
-#video-container {
+#video_container {
   width: 100%;
-  height: 100%; }
+  height: 100%;
+  display: flex;
+  justify-content: center; }
 
 #osd {
   display: none;
@@ -183,9 +182,6 @@ hr {
 
 #osd.running {
   background: #00f; }
-
-#controls {
-  width: 1280px; }
 
 .option-row {
   display: flex; }
@@ -222,7 +218,6 @@ hr {
   height: 24px;
   font-size: 14px;
   font-weight: 700;
-  width: 1280px;
   background: #222;
   border-bottom: 1px solid #333;
   color: #fff;
@@ -245,7 +240,6 @@ hr {
 
 #timeline-markers {
   position: relative;
-  width: 1280px;
   height: 16px;
   pointer-events: none; }
 
@@ -263,7 +257,6 @@ hr {
   overflow: hidden;
   font-size: 14px;
   font-weight: 700;
-  width: 1280px;
   background: #222;
   color: #fff;
   padding: 2px 4px; }

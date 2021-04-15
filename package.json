@@ -10,7 +10,8 @@
   "scripts": {
     "watch": "webpack --watch",
     "start": "webpack-dev-server --open --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js"
+    "build": "webpack --config webpack.prod.js",
+    "build-scss": "node-sass ./src/player.scss ./dist/player.css"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "babel-loader": "^8.1.0",
     "css-loader": "^3.6.0",
+    "node-sass": "^5.0.0",
     "ts-loader": "^6.2.2",
     "typescript": "^3.9.7",
     "vue": "^2.6.11",

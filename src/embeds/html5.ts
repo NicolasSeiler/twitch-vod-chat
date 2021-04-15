@@ -31,8 +31,9 @@ export default class EmbedVideoPlayer extends EmbedPlayer {
         video_container.appendChild(this.player);
 
         this.player.src = this.video_path;
-        this.player.width = 1280;
-        this.player.height = 720;
+        this.player.controls = true;
+        // this.player.width = 1280;
+        // this.player.height = 720;
         this.manualPause = this.player.paused;
 
         this.player.addEventListener("canplay", () => {

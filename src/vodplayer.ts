@@ -365,17 +365,14 @@ export default class VODPlayer {
 
         if (!this.timeStart) {
             throw ('No start time in tick');
-            return false;
         }
 
         if (!this.vodLength) {
             throw ('No vod length in tick');
-            return false;
         }
 
         if (!this.embedPlayer) {
             throw ('No embed player in tick');
-            return false;
         }
 
         let timeNow = Date.now();
@@ -880,7 +877,6 @@ export default class VODPlayer {
 
         if (!this.embedPlayer) {
             throw ('no embed player when playing');
-            return false;
         }
 
         this.commentQueue = [];
@@ -928,11 +924,10 @@ export default class VODPlayer {
      * Seek in the video
      * @param seconds
      */
-    seek(seconds: number) {
+    seek(seconds: number, isFromVideoElement: boolean = false) {
 
         if (!this.vodLength) {
             throw ('no vod length when seeking');
-            return false;
         }
 
         if (this.embedPlayer) {
@@ -948,10 +943,12 @@ export default class VODPlayer {
 
             if (this.elements.video.src) this.elements.video.currentTime = seekedToSeconds;
             */
-            this.embedPlayer.seek( seconds );
+            if (!isFromVideoElement) {
+                this.embedPlayer.seek( seconds );
+            }
 
             // offset chat
-            this.timeStart = (Date.now() - (seconds * 1000)) + this.chatOffset;
+            this.timeStart = (Date.now() - (seconds * 1000)) - (this.chatOffset * 1000);
 
             console.debug("Post seek", this.videoCurrentTime, this.timeStart);
 
@@ -1093,9 +1090,40 @@ export default class VODPlayer {
 
             let fileURL = URL.createObjectURL(file);
 
-            this.embedPlayer = new EmbedVideoPlayer(fileURL);
+            const videoPlayer = new EmbedVideoPlayer(fileURL)
+            this.embedPlayer = videoPlayer;
             this.embedPlayer.vodplayer = this;
             this.embedPlayer.setup();
+
+            videoPlayer.player.addEventListener('seeked', ( ev : HTMLInputEvent ) => {
+                console.log("SEEKING FROM HOOK");
+                this.seek(videoPlayer.player.currentTime, true);
+            });
+
+            videoPlayer.player.addEventListener('play', ( ev : HTMLInputEvent ) => {
+                console.log("PLAYING FROM HOOK");
+                if (!this.playing) {
+                    this.commentQueue = [];
+            
+                    this.timeStart = Date.now();
+
+                    // offset
+                    console.log("CHAT OFFSET:", this.chatOffset);
+                    this.timeStart -= this.chatOffset * 1000;
+                    this.interval = setInterval(this.tick.bind(this), this.tickDelay / this.timeScale);
+                } else if (!this.interval) {
+                    this.interval = setInterval(this.tick.bind(this), this.tickDelay / this.timeScale);
+                }
+                this.playing = true;
+            });
+
+            videoPlayer.player.addEventListener('pause', ( ev : HTMLInputEvent ) => {
+                console.log("PAUSING FROM HOOK");
+                if (this.interval) {
+                    clearInterval(this.interval);
+                }
+                this.playing = false;
+            });
 
             return true;
 
@@ -1320,7 +1348,6 @@ export default class VODPlayer {
             if (!json.data) {
                 alert("VOD loading error, probably deleted");
                 throw 'VOD loading error, probably deleted';
-                return false;
             }
 
             let data = json.data[0];
@@ -1653,23 +1680,6 @@ export default class VODPlayer {
     hooks() {
 
         // seeking on video player
-        /*
-        this.fetchChatRunning
-        this.elements.video.addEventListener('seeked', ( ev : HTMLInputEvent ) => {
-
-            if( chatLog ){
-
-                this.reset();
-
-                // offset chat
-                this.timeStart = Date.now() - ( this.elements.video.currentTime * 1000 );
-
-            }else{
-                console.error('No chat log loaded');
-            }
-
-        });
-        */
 
         // on ready
         /*
