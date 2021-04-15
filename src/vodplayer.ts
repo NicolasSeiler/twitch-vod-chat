@@ -749,7 +749,6 @@ export default class VODPlayer {
 
         // update timeline
 
-        console.log("tick");
         let timelineText = 'C: ' + this.timeFormat(timeRelative * this.timeScale);
 
         if (this.embedPlayer.getCurrentTime()) {
