@@ -749,6 +749,7 @@ export default class VODPlayer {
 
         // update timeline
 
+        console.log("tick");
         let timelineText = 'C: ' + this.timeFormat(timeRelative * this.timeScale);
 
         if (this.embedPlayer.getCurrentTime()) {
@@ -948,7 +949,7 @@ export default class VODPlayer {
             }
 
             // offset chat
-            this.timeStart = (Date.now() - (seconds * 1000)) - (this.chatOffset * 1000);
+            this.timeStart = Date.now() - (seconds * 1000) - (this.chatOffset * 1000);
 
             console.debug("Post seek", this.videoCurrentTime, this.timeStart);
 
@@ -1118,11 +1119,11 @@ export default class VODPlayer {
             });
 
             videoPlayer.player.addEventListener('pause', ( ev : HTMLInputEvent ) => {
-                console.log("PAUSING FROM HOOK");
                 if (this.interval) {
+                    console.log("PAUSING FROM HOOK");
                     clearInterval(this.interval);
+                    this.interval = null;
                 }
-                this.playing = false;
             });
 
             return true;
